@@ -1,0 +1,1 @@
+Setting up AD in aws: https://www.ecloudture.com/en/use-ec2-to-build-windows-active-directory-2/
