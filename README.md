@@ -55,8 +55,9 @@ The architecture includes:
 
 ### Step 2: Network ACL Configurations
 
-- Public Subnet NACL: Allows SSH (port 22) from trusted IPs and all outbound traffic.
-  ![image](https://github.com/user-attachments/assets/29ced898-eb52-495f-93bf-449df48d24a4)
+- Public Subnet NACL: Allows RDP from trusted IPs and all outbound traffic.
+![image](https://github.com/user-attachments/assets/4bd8da43-be20-4885-9df5-5e2ffcf24b5c)
+
 - Private Subnet NACL: Allows only specific inbound traffic (e.g., HTTP/HTTPS if hosting a web app) and denies others.
  ![image](https://github.com/user-attachments/assets/8188b719-2add-4c2a-b6f6-460e576e4def)
 
