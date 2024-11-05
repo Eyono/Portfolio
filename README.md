@@ -29,7 +29,7 @@ The architecture includes:
 ## Key Components
 
 - **VPC**: Custom VPC with public and private subnets.
-- **Bastion Host**: Allows secure SSH access to instances in the private subnet.
+- **Bastion Host**: Allows secure RDP access to instances in the private subnet.
 - **Security Groups**: Configured to control inbound and outbound traffic for each instance.
 - **Network ACLs**: Additional layer of security applied at the subnet level.
 
@@ -45,18 +45,27 @@ The architecture includes:
 
 ### Step 1: VPC and Subnet Creation
 
-1. Create a new VPC with CIDR block `10.0.0.0/16`.
-2. Add public and private subnets, ensuring that only the public subnet has an internet gateway attached.
+1. Create a new VPC with CIDR block `23.0.0.0/16`.
+   ![image](https://github.com/user-attachments/assets/879ae932-d427-4731-b4d1-46ab391f59f8)
 
-### Step 2: Security Group Configurations
+2. Add public and private subnets.
+![image](https://github.com/user-attachments/assets/b1bc8a42-f9dd-4971-9821-061bdaaa907c)
+3. Create a public route table with internet gatway and associating it with the public subnet.
+![image](https://github.com/user-attachments/assets/7d665f64-4d08-4c91-8b42-0a6c77e96d5d)
 
-- **Public Subnet Security Group**: Allows inbound SSH access only from a specified IP.
-- **Private Subnet Security Group**: Allows traffic only from the bastion host.
-
-### Step 3: Network ACL Configurations
+### Step 2: Network ACL Configurations
 
 - Public Subnet NACL: Allows SSH (port 22) from trusted IPs and all outbound traffic.
+  ![image](https://github.com/user-attachments/assets/29ced898-eb52-495f-93bf-449df48d24a4)
 - Private Subnet NACL: Allows only specific inbound traffic (e.g., HTTP/HTTPS if hosting a web app) and denies others.
+ ![image](https://github.com/user-attachments/assets/8188b719-2add-4c2a-b6f6-460e576e4def)
+
+### Step 3: Security Group Configurations
+
+- **Bastion Security Group**: Allows inbound RDP access only from a specified IP.
+- **Web App Security Group**: Allows traffic only from the bastion host.
+
+
 
 ### Step 4: Setting Up the Bastion Host
 
