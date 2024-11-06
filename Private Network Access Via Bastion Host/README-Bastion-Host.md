@@ -64,39 +64,35 @@ The architecture includes:
 ### Step 3: Security Group Configurations
 
 - **Bastion Security Group**: Allows inbound RDP access only from a specified IP.
+  ![image](https://github.com/user-attachments/assets/cc200019-559d-4de6-85ab-9baccb764efe)
+
+
 - **Web App Security Group**: Allows traffic only from the bastion host.
+![image](https://github.com/user-attachments/assets/eace3dd0-4dec-41b0-9b31-82ff33878263)
 
 
 
-### Step 4: Setting Up the Bastion Host
+### Step 4: Setting Up the Bastion Host and Webapp
 
 1. Deploy an EC2 instance in the public subnet to serve as a bastion host.
-2. Attach the public subnet security group to the bastion host.
-3. Configure the bastion host to allow SSH access only from your trusted IP.
+2. Attach the Bastion security group to the bastion host.
+![image](https://github.com/user-attachments/assets/d8fab3a3-f5a3-44b1-a577-92933a58ae51)
 
-## Code and Configuration Files
+4. Deploy an EC2 instance in the private subnet to serve as the web app
+5. Attach the web app security group to the web app instance.
+![image](https://github.com/user-attachments/assets/ed2c12cd-7df5-4a28-967f-9f987f1d8f45)
 
-- See the `config/` folder for CloudFormation or Terraform scripts used to automate the setup.
-- `code/`: Contains any scripts or CLI commands for setting up security groups, NACLs, and EC2 instances.
+### Step 5: Connecting To the Webapp From the Bastion Host
+1. Connect to the Bastion host from my machine through RDP
+2. From the Bastion host RDP into the Webapp
+![image](https://github.com/user-attachments/assets/877a49ff-912c-40a5-8e69-58225e0fce48)
+
 
 ## Lessons Learned and Best Practices
 
 - **Least Privilege Principle**: Ensuring minimal access by setting restrictive Security Group and NACL rules.
 - **Subnet Isolation**: Using public and private subnets to isolate application layers.
 - **Auditing Access**: Regularly monitoring network traffic and updating security rules as needed.
-
-## Screenshots
-
-Include screenshots of:
-- AWS console showing the VPC setup.
-- Security Group configurations.
-- Network ACL configurations.
-
-## How to Use This Repository
-
-1. Clone the repository.
-2. Follow the instructions in `docs/` to set up the environment.
-3. Review `config/` for automated deployment scripts (Terraform/CloudFormation).
 
 ## Future Enhancements
 
