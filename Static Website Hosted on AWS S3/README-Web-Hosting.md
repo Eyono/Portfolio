@@ -14,9 +14,6 @@ This project is a static website hosted on Amazon S3. It is designed to provide 
 - CSS
 
 ## S3 Live Demo
-[Visit the live site](https://web-buck-proj.s3.amazonaws.com/S3-static-hosting/index.html)
-
-## CloudFront Live Demo
 [Visit the live site](https://d251w67tkq18qq.cloudfront.net/)
 
 ## Screenshots
