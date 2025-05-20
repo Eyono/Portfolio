@@ -1,129 +1,138 @@
-Terraform AWS Lab: Highly Available Web Server Infrastructure
+# Terraform AWS Lab: Highly Available Web Server Infrastructure
 
 This project provisions a complete, highly available web infrastructure on AWS using Terraform. The setup includes public and private subnets across two availability zones, a NAT Gateway, bastion host, two private web servers behind a public-facing Application Load Balancer (ALB), and all necessary networking and security components.
 
-🔧 Infrastructure Overview
+---
 
-VPC & Subnets
+## 🔧 Infrastructure Overview
 
-VPC: Custom VPC with CIDR block 15.0.0.0/16
+### VPC & Subnets
 
-Public Subnets:
+* **VPC**: Custom VPC with CIDR block `15.0.0.0/16`
+* **Public Subnets**:
 
-tf-subnet-publicA (AZ: us-east-1a)
+  * `tf-subnet-publicA` (AZ: `us-east-1a`)
+  * `tf-subnet-publicB` (AZ: `us-east-1b`)
+* **Private Subnets**:
 
-tf-subnet-publicB (AZ: us-east-1b)
+  * `tf-subnet-privateA` (AZ: `us-east-1a`)
+  * `tf-subnet-privateB` (AZ: `us-east-1b`)
 
-Private Subnets:
+### Internet & NAT Gateway
 
-tf-subnet-privateA (AZ: us-east-1a)
+* **Internet Gateway** attached to the VPC for public subnet internet access
+* **Elastic IP** for NAT
+* **NAT Gateway** in `tf-subnet-publicA` allowing private subnet instances to reach the internet
 
-tf-subnet-privateB (AZ: us-east-1b)
+### Route Tables
 
-Internet & NAT Gateway
+* **Public Route Table**: Routes `0.0.0.0/0` to the Internet Gateway
+* **Private Route Table**: Routes `0.0.0.0/0` to the NAT Gateway
+* Associations established for all subnets to their respective route tables
 
-Internet Gateway attached to the VPC for public subnet internet access
+---
 
-Elastic IP for NAT
+## 🛡 Security Groups
 
-NAT Gateway in tf-subnet-publicA allowing private subnet instances to reach the internet
+* **Bastion Host SG**: Allows SSH from anywhere
+* **ALB SG**: Allows inbound HTTP (port 80) from the internet
+* **EC2 Web Server SG**:
 
-Route Tables
+  * Allows SSH from the bastion host
+  * Allows HTTP from the ALB
+  * Allows all outbound traffic
 
-Public Route Table: Routes 0.0.0.0/0 to the Internet Gateway
+---
 
-Private Route Table: Routes 0.0.0.0/0 to the NAT Gateway
+## 🧩 Compute Resources
 
-Associations established for all subnets to their respective route tables
+### Bastion Host
 
-🛡 Security Groups
+* Amazon Linux 2 in public subnet A
+* Used to securely SSH into private EC2 instances
 
-Bastion Host SG: Allows SSH from anywhere
+### EC2 Web Servers
 
-ALB SG: Allows inbound HTTP (port 80) from the internet
+* Two instances deployed in private subnets A & B
+* Run Apache web server with simple HTML content
 
-EC2 Web Server SG:
+### Key Pair
 
-Allows SSH from the bastion host
+* `web-key` used to SSH into instances (public key provided locally)
 
-Allows HTTP from the ALB
+---
 
-Allows all outbound traffic
+## 🌐 Application Load Balancer (ALB)
 
-🧩 Compute Resources
+* **Type**: Application (Layer 7)
+* **Accessibility**: Public
+* **Subnets**: Deployed across public subnets A & B
+* **Security Group**: Allows inbound HTTP (port 80)
+* **Target Group**:
 
-Bastion Host
+  * Includes both private EC2 instances
+  * Health checks and routing managed through the listener
 
-Amazon Linux 2 in public subnet A
+---
 
-Used to securely SSH into private EC2 instances
+## 🧠 Concepts Practiced
 
-EC2 Web Servers
+* Terraform Infrastructure as Code (IaC)
+* Multi-AZ VPC architecture
+* NAT and Internet Gateways
+* Application Load Balancer and Target Groups
+* Secure EC2 access with a Bastion Host
+* Role-based security group configuration
+* EC2 bootstrapping using `user_data`
 
-Two instances deployed in private subnets A & B
+---
 
-Run Apache web server with simple HTML content
+## 🚀 Usage
 
-Key Pair
+1. Create a key pair locally and provide the path to your public key in the Terraform file
+2. Run `terraform init` to initialize providers
+3. Run `terraform plan` to preview the infrastructure
+4. Run `terraform apply` to deploy it to AWS
 
-web-key used to SSH into instances (public key provided locally)
+---
 
-🌐 Application Load Balancer (ALB)
+## 📁 File Structure
 
-Type: Application (Layer 7)
-
-Accessibility: Public
-
-Subnets: Deployed across public subnets A & B
-
-Security Group: Allows inbound HTTP (port 80)
-
-Target Group:
-
-Includes both private EC2 instances
-
-Health checks and routing managed through the listener
-
-🧠 Concepts Practiced
-
-Terraform Infrastructure as Code (IaC)
-
-Multi-AZ VPC architecture
-
-NAT and Internet Gateways
-
-Application Load Balancer and Target Groups
-
-Secure EC2 access with a Bastion Host
-
-Role-based security group configuration
-
-EC2 bootstrapping using user_data
-
-🚀 Usage
-
-Create a key pair locally and provide the path to your public key in the Terraform file
-
-Run terraform init to initialize providers
-
-Run terraform plan to preview the infrastructure
-
-Run terraform apply to deploy it to AWS
-
-📁 File Structure
-
+```
 .
 ├── main.tf         # All resources defined here
 ├── web-key.pub     # Public key used in key pair
 └── README.md       # Project documentation
+```
 
-✅ Output
+---
+
+## ✅ Output
 
 After deployment:
 
-You can access the web application through the ALB DNS name (output shown after apply)
+* You can access the web application through the ALB DNS name (output shown after `apply`)
+* SSH into the bastion host and connect to private EC2s
+* Each web server displays a unique message (`Hello from Terraform 1/2!`)
 
-SSH into the bastion host and connect to private EC2s
+---
 
-Each web server displays a unique message (Hello from Terraform 1/2!)
+## 🏗 Future Improvements
 
+* Add autoscaling groups for web servers
+* Use private ACM certificates for HTTPS via ALB
+* Implement CloudWatch monitoring and alarms
+* Add a backend (e.g., RDS or DynamoDB) behind the web servers
+
+---
+
+## Author
+
+**Eyas Alarayshi**
+[Cybersecurity, Cloud & IT Professional](https://www.linkedin.com/in/eyas-alarayshi)
+
+---
+
+## License
+
+This project is for educational and portfolio purposes. Feel free to reuse with credit.
